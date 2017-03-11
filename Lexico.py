@@ -13,12 +13,10 @@ arreglo = ["CATEGORIA \t##\t COMPONENTE LÉXICO   ## Fila"]
 
 while contador < len(linea):
     caracter = linea[contador]
-
-    if (caracter == ' ') & (estado == STATE.BEGGIN):
-        cont_inicial += 1
-
-    if caracter == '\n':
-        lineaActual += 1
+    if ((caracter == '\n') | (caracter == ' ') | (caracter == '\t')) & (estado == STATE.BEGGIN):
+        if caracter == '\n':
+            lineaActual += 1
+        cont_inicial = contador+1
         contador += 1
         continue
 

@@ -1,7 +1,10 @@
+				
+
 /* Hola mundo*/
 //comentario2
-/*comentario3*/
-//comentario4
-//
+/*comentario3*//*comentario3*/
+ //comentario4
+///**/
 //comentario5
+/*comentario3*/
 Ahora un error :)
