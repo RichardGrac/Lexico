@@ -1,15 +1,11 @@
-int a
-while b
-real c
-repeat
-/*Comentario*/
-//Comentario2
-/*
-Bloque de comentario
-*/
-12345SALUDOS
-987SALUDOSXD654
-12.34
-12.
-variable
-//comentario31234123.1234
+int a := 5
+real b := 5.0
+x := a / b
+x++
+int y := 10.
+* % ( ) {},;
+main
+if
+then
+else end	int
+/*Error, no cierro comentario
