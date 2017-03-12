@@ -2,45 +2,53 @@ from STATE import STATE
 
 archivo = open("Input.txt")
 linea = archivo.read()
+linea += "\n"
 archivo.close()
 
+pReservadas = ["main","if","then","else end","do","while","repeat","until","cin","cout","real","int","boolean"]
 estado = STATE.BEGGIN  #TOKEN en el que se encuentra
 cont_inicial = 0 #Contará las posiciones desde la última
 contador = 0 #Puntero que recorrerá el texto
 band = True #Estado de error
 lineaActual = 1 #Linea del archivo en la que se encuentra
-arreglo = ["CATEGORIA \t##\t COMPONENTE LÉXICO   ## Fila"]
+arreglo = ["CATEGORIA##COMPONENTE LÉXICO##Fila"]
 
 while contador < len(linea):
     caracter = linea[contador]
-    if ((caracter == '\n') | (caracter == ' ') | (caracter == '\t')) & (estado == STATE.BEGGIN):
-        if caracter == '\n':
-            lineaActual += 1
-        cont_inicial = contador+1
-        contador += 1
-        continue
-
     #INICIO DE AUTÓMATA
     if (estado == STATE.BEGGIN):
-        if caracter == '/':
+        if ((caracter >= 'A') & (caracter <= 'Z')) | ((caracter >= 'a') & (caracter <= 'z')) | (caracter == '_'):
+            estado = STATE.IN_STRING
+        elif caracter == '/':
             estado = STATE.DIFFERENCE
         elif (caracter == ' ') | (caracter == '\t') | (caracter == '\n'):
-            estado = STATE.BEGGIN #División
+            if caracter == '\n':
+                lineaActual += 1
+            cont_inicial = (contador + 1)
+            contador += 1
+            continue
         else:
             estado = STATE.ERROR #Estado de Error
+    elif estado == STATE.IN_STRING:
+        if ((caracter < 'A') | (caracter > 'Z')) & ((caracter < 'a') | (caracter > 'z')) & ((caracter < '0') | (caracter > '9')) & ((caracter != '_')):
+            estado = STATE.END
+            if linea[cont_inicial:contador] in pReservadas:
+                arreglo.append("Palabra reservada##" + linea[cont_inicial:contador] + "##" + str(lineaActual))
+            else:
+                arreglo.append("Identificador##" + linea[cont_inicial:contador] + "##" + str(lineaActual))
+            contador -= 1
+
     elif estado == STATE.DIFFERENCE:
         if caracter == '*':
             estado = STATE.IN_MULTIPLE_COMMENT
         elif caracter == '/':
-            estado = STATE.BEGGIN #Forma de terminar
+            estado = STATE.END #Forma de terminar
             while (contador < len(linea)) & (linea[contador] != '\n'):
                 contador += 1
-            # cont_inicial += 1
             while linea[cont_inicial] == '\n':
                 cont_inicial += 1
             # print("Comment inline detected: " + linea[cont_inicial:contador])
             arreglo.append("Comment inline ## " + linea[cont_inicial:contador] + "##" + str(lineaActual))
-            cont_inicial = (contador+1)
             lineaActual += 1
         else:
             estado = STATE.ERROR
@@ -49,9 +57,8 @@ while contador < len(linea):
             estado = STATE.IN_MULTIPLE_COMMENT_END
     elif estado == STATE.IN_MULTIPLE_COMMENT_END:
         if caracter == '/':
-            estado = STATE.BEGGIN #Terminó, volvemos al estado inicial
+            estado = STATE.END #Terminó, volvemos al estado inicial
             arreglo.append("Multiple comment ## " + linea[cont_inicial:contador + 1] + "##" + str(lineaActual))
-            cont_inicial = (contador+1)
             if linea[contador+1] == '\n':
                 cont_inicial += 1
         elif caracter == '*':
@@ -59,6 +66,9 @@ while contador < len(linea):
         else:
             estado = STATE.IN_MULTIPLE_COMMENT
 
+    if estado == STATE.END:
+        cont_inicial = (contador+1)
+        estado = STATE.BEGGIN
     if estado == STATE.ERROR:
        band = False
        break

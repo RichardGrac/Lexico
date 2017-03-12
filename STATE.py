@@ -16,3 +16,5 @@ class STATE(Enum):
     #Operadores logicos
     DOUBLE_ADDITION = 10
     DOUBLE_SUBSTRACTION = 11
+    #Cadena
+    IN_STRING = 12
