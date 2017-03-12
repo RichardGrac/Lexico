@@ -7,11 +7,11 @@ archivo.close()
 
 pReservadas = ["main", "if", "then", "else end", "do", "while", "repeat", "until", "cin", "cout", "real", "int",
                "boolean"]
-estado = STATE.BEGGIN  # TOKEN en el que se encuentra
-cont_inicial = 0  # Contará las posiciones desde la última
-contador = 0  # Puntero que recorrerá el texto
-lineaActual = 1  # Linea del archivo en la que se encuentra
-lineasExtras = 0  # Contará los \n de un bloque de comentarios
+estado = STATE.BEGGIN        # TOKEN en el que se encuentra
+cont_inicial = 0             # Contará las posiciones desde la última
+contador = 0                 # Puntero que recorrerá el texto
+lineaActual = 1              # Linea del archivo en la que se encuentra
+lineasExtras = 0             # Contará los \n de un bloque de comentarios
 arreglo = ["CATEGORIA##COMPONENTE LEXICO##Fila"]
 errores = []
 
