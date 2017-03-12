@@ -162,7 +162,7 @@ while contador < len(linea):
         cont_inicial = (contador + 1)
         estado = STATE.BEGGIN
     if estado == STATE.ERROR:
-        errores.append("Error en linea: " + str(lineaActual))
+        errores.append(str(lineaActual))
         while (contador < len(linea)) & (linea[contador] != '\n'):
             contador += 1
         cont_inicial = (contador + 1)
@@ -173,7 +173,7 @@ while contador < len(linea):
 
 # Si está en estado de error 0 ó si quedó en un estado NO TERMINANTE (Comentario multiple sin cerrar):
 if (estado == STATE.ERROR) | ((estado != STATE.END) & (estado != STATE.BEGGIN)):
-    errores.append("Error en linea: " + str(lineaActual))
+    errores.append(str(lineaActual))
 
 for tokens in arreglo:
     print(tokens)
