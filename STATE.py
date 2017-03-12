@@ -18,3 +18,6 @@ class STATE(Enum):
     DOUBLE_SUBSTRACTION = 11
     #Cadena
     IN_STRING = 12
+    #Numeros
+    IN_NUMERAL = 13
+    IN_FLOAT = 14

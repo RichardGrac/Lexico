@@ -7,3 +7,9 @@ repeat
 /*
 Bloque de comentario
 */
+12345SALUDOS
+987SALUDOSXD654
+12.34
+12.
+variable
+//comentario31234123.1234
