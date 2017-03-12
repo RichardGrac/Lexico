@@ -28,3 +28,4 @@ class STATE(Enum):
     IN_GREATER = 16
     IN_NEGATION = 17
     IN_ASSIGNMENT = 18
+    IN_EQUAL = 19

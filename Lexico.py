@@ -41,8 +41,10 @@ while contador < len(linea):
             estado = STATE.IN_GREATER
         elif caracter == ':':
             estado = STATE.IN_ASSIGNMENT
-        elif caracter == "!":
+        elif caracter == '!':
             estado = STATE.IN_NEGATION
+        elif caracter == '=':
+            estado = STATE.IN_EQUAL
         elif (caracter == '*') | (caracter == '%'):
             arreglo.append("Operador##" + linea[cont_inicial:contador + 1] + "##" + str(lineaActual))
             estado = STATE.END
@@ -152,6 +154,13 @@ while contador < len(linea):
             contador -= 1
             estado = STATE.ERROR
     elif estado == STATE.IN_NEGATION:
+        if caracter == '=':
+            arreglo.append("Op. comparacion##" + linea[cont_inicial:contador + 1] + "##" + str(lineaActual))
+            estado = STATE.END
+        else:
+            contador -= 1
+            estado = STATE.ERROR
+    elif estado == STATE.IN_EQUAL:
         if caracter == '=':
             arreglo.append("Op. comparacion##" + linea[cont_inicial:contador + 1] + "##" + str(lineaActual))
             estado = STATE.END

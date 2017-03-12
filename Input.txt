@@ -1,11 +1,2 @@
-int a := 5
-real b := 5.0
-x := a / b
-x++
-int y := 10.
-* % ( ) {},;
-main
-if
-then
-else end	int
-/*Error, no cierro comentario
+=
+====
