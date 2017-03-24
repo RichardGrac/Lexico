@@ -13,7 +13,7 @@ contador = 0                 # Puntero que recorrerá el texto
 lineaActual = 1              # Linea del archivo en la que se encuentra
 lineasExtras = 0             # Contará los \n de un bloque de comentarios
 colActual = 1                # Contador de columna en que se encuentra
-arreglo = ["Fila\tCATEGORIA\tCOMPONENTE LEXICO"]
+arreglo = []
 errores = []
 
 # Cuando hago contador -= 1 es porque vamos a repetir la lectura de ese caracter que rompió con la secuencia del
@@ -52,11 +52,11 @@ while contador < len(linea):
         elif caracter == '=':
             estado = STATE.IN_EQUAL
         elif (caracter == '*') | (caracter == '%'):
-            arreglo.append(str(lineaActual) + "\tOperador          \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Operador          \t#" + linea[cont_inicial:contador + 1])
             estado = STATE.END
         elif (caracter == '(') | (caracter == ')') | (caracter == '{') | (caracter == '}') | (caracter == ';') | \
                 (caracter == ','):
-            arreglo.append(str(lineaActual) + "\tSimbolo especial \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Simbolo especial \t#" + linea[cont_inicial:contador + 1])
             estado = STATE.END
         else:
             estado = STATE.ERROR  # Estado de Error
@@ -65,9 +65,9 @@ while contador < len(linea):
                 ((caracter < '0') | (caracter > '9')) & (caracter != '_'):
             estado = STATE.END
             if linea[cont_inicial:contador] in pReservadas:
-                arreglo.append(str(lineaActual) + "\tPalabra reservada\t" + linea[cont_inicial:contador])
+                arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Palabra reservada\t#" + linea[cont_inicial:contador])
             else:
-                arreglo.append(str(lineaActual) + "\tIdentificador    \t" + linea[cont_inicial:contador])
+                arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Identificador    \t#" + linea[cont_inicial:contador])
             contador -= 1
             colActual -= 1
     elif estado == STATE.IN_NUMERAL:
@@ -78,13 +78,13 @@ while contador < len(linea):
                 estado = STATE.ERROR
         elif (caracter < '0') | (caracter > '9'):
             estado = STATE.END
-            arreglo.append(str(lineaActual) + "\tCte. numerica    \t" + linea[cont_inicial:contador])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Cte. numerica    \t#" + linea[cont_inicial:contador])
             contador -= 1
             colActual -= 1
     elif estado == STATE.IN_FLOAT:
         if (caracter < '0') | (caracter > '9'):
             estado = STATE.END
-            arreglo.append(str(lineaActual) + "\tFlotante         \t" + linea[cont_inicial:contador])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Flotante         \t#" + linea[cont_inicial:contador])
             contador -= 1
             colActual -= 1
     elif estado == STATE.DIFFERENCE:
@@ -97,11 +97,11 @@ while contador < len(linea):
             while linea[cont_inicial] == '\n':
                 cont_inicial += 1
             # print("Comment inline detected: " + linea[cont_inicial:contador])
-            arreglo.append(str(lineaActual) + "\tComment inline    \t " + linea[cont_inicial:contador])
+            # arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Comment inline    \t " + linea[cont_inicial:contador])
             lineaActual += 1
             colActual = 1
         else:
-            arreglo.append(str(lineaActual) + "\tOperador          \t" + linea[cont_inicial:contador])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Operador          \t#" + linea[cont_inicial:contador])
             contador -= 1
             colActual -= 1
             estado = STATE.END
@@ -115,7 +115,7 @@ while contador < len(linea):
             lineasExtras += 1
         if caracter == '/':
             estado = STATE.END  # Terminó, volvemos al estado inicial
-            arreglo.append(str(lineaActual) + "\tMultiple comment   \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Multiple comment   \t#" + linea[cont_inicial:contador + 1])
             if linea[contador + 1] == '\n':
                 cont_inicial += 1
             lineaActual += lineasExtras
@@ -126,49 +126,49 @@ while contador < len(linea):
             estado = STATE.IN_MULTIPLE_COMMENT
     elif estado == STATE.ADDITION:
         if caracter == '+':
-            arreglo.append(str(lineaActual) + "\tOp. Incremento    \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Op. Incremento    \t#" + linea[cont_inicial:contador + 1])
             estado = STATE.END
         elif (caracter >= '0') & (caracter <= '9'):
             estado = STATE.IN_NUMERAL
             contador -= 1
             colActual -= 1
         else:
-            arreglo.append(str(lineaActual) + "\tOperador          \t" + linea[cont_inicial:contador])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Operador          \t#" + linea[cont_inicial:contador])
             contador -= 1
             colActual -= 1
             estado = STATE.END
     elif estado == STATE.SUBSTRACTION:
         if caracter == '-':
-            arreglo.append(str(lineaActual) + "\tOp. Decremento    \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Op. Decremento    \t#" + linea[cont_inicial:contador + 1])
             estado = STATE.END
         elif (caracter >= '0') & (caracter <= '9'):
             estado = STATE.IN_NUMERAL
             contador -= 1
             colActual -= 1
         else:
-            arreglo.append(str(lineaActual) + "\tOperador          \t" + linea[cont_inicial:contador])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Operador          \t#" + linea[cont_inicial:contador])
             contador -= 1
             colActual -= 1
             estado = STATE.END
     elif estado == STATE.IN_LESS:
         if caracter == '=':
-            arreglo.append(str(lineaActual) + "\tOp. relacional     \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Op. relacional     \t#" + linea[cont_inicial:contador + 1])
         else:
-            arreglo.append(str(lineaActual) + "\tOp. relacional     \t" + linea[cont_inicial:contador])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Op. relacional     \t#" + linea[cont_inicial:contador])
             contador -= 1
             colActual -= 1
         estado = STATE.END
     elif estado == STATE.IN_GREATER:
         if caracter == '=':
-            arreglo.append(str(lineaActual) + "\tOp. relacional     \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Op. relacional     \t#" + linea[cont_inicial:contador + 1])
         else:
-            arreglo.append(str(lineaActual) + "\tOp. relacional     \t" + linea[cont_inicial:contador])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Op. relacional     \t#" + linea[cont_inicial:contador])
             contador -= 1
             colActual -= 1
         estado = STATE.END
     elif estado == STATE.IN_ASSIGNMENT:
         if caracter == '=':
-            arreglo.append(str(lineaActual) + "\tOp. Asignacion    \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Op. Asignacion    \t#" + linea[cont_inicial:contador + 1])
             estado = STATE.END
         else:
             contador -= 1
@@ -176,7 +176,7 @@ while contador < len(linea):
             estado = STATE.ERROR
     elif estado == STATE.IN_NEGATION:
         if caracter == '=':
-            arreglo.append(str(lineaActual) + "\tOp. comparacion   \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Op. comparacion   \t#" + linea[cont_inicial:contador + 1])
             estado = STATE.END
         else:
             contador -= 1
@@ -184,7 +184,7 @@ while contador < len(linea):
             estado = STATE.ERROR
     elif estado == STATE.IN_EQUAL:
         if caracter == '=':
-            arreglo.append(str(lineaActual) + "\tOp. comparacion   \t" + linea[cont_inicial:contador + 1])
+            arreglo.append(str(lineaActual) + "#" + str(colActual-(contador-cont_inicial)) + "#" + "Op. comparacion   \t#" + linea[cont_inicial:contador + 1])
             estado = STATE.END
         else:
             contador -= 1
@@ -194,7 +194,7 @@ while contador < len(linea):
         cont_inicial = (contador + 1)
         estado = STATE.BEGGIN
     if estado == STATE.ERROR:
-        errores.append("Error en: (" + str(lineaActual) + "," + str(colActual) + ")")
+        errores.append("Error en (" + str(lineaActual) + "," + str(colActual) + "): " + linea[cont_inicial:contador + 1])
         cont_inicial = (contador + 1)
         estado = STATE.BEGGIN
     contador += 1
@@ -205,12 +205,15 @@ while contador < len(linea):
 if (estado == STATE.ERROR) | ((estado != STATE.END) & (estado != STATE.BEGGIN)):
     contador -= 1
     colActual -= 1
-    errores.append("Error en: (" + str(lineaActual) + "," + str(colActual) + ")")
+    if (estado == STATE.IN_MULTIPLE_COMMENT) | (estado == STATE.IN_MULTIPLE_COMMENT_END):
+        errores.append("Error en (" + str(lineaActual) + "," + str(colActual) + "): [Comentario]")
+    else:
+        errores.append("Error en (" + str(lineaActual) + "," + str(colActual) + "): " + linea[cont_inicial:contador + 1])
 
 for tokens in arreglo:
     print(tokens)
 
-print("\n\nERRORES:")
+# print("ERRORES:")
 for error in errores:
     print(error)
 

@@ -1,3 +1,4 @@
+312312.id
 int vector, su&mas, res@tas,suma1,suma2,25ert;
 main if(while)if+34.34.34.34.34-34+++---
 cin >>>=<<<====!=
@@ -27,6 +28,7 @@ cout x;
 }
 
 // esto es un comentario
+//este otro
 
 /*
 de
